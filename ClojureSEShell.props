@@ -1,0 +1,38 @@
+plugin.clojure.seshell.ClojureSEShellPlugin.name=Clojure SE Shell
+plugin.clojure.seshell.ClojureSEShellPlugin.author=Jakub Roztocil, Robert Ledger, Zigmantas Kryzius
+plugin.clojure.seshell.ClojureSEShellPlugin.description=\
+		  Provides an interactive Clojure SE (scripting engine) console and allows macros \
+		  and startup scripts to be written in Clojure.
+plugin.clojure.seshell.ClojureSEShellPlugin.version=0.9
+plugin.clojure.seshell.ClojureSEShellPlugin.docs=docs/index.html
+plugin.clojure.seshell.ClojureSEShellPlugin.activate=startup
+#defer
+plugin.clojure.seshell.ClojureSEShellPlugin.depend.0=jedit 05.03.00.00
+plugin.clojure.seshell.ClojureSEShellPlugin.depend.1=jdk 1.8
+plugin.clojure.seshell.ClojureSEShellPlugin.depend.2=plugin console.ConsolePlugin 4.3.3
+plugin.clojure.seshell.ClojureSEShellPlugin.depend.3=plugin clojure.ClojurePlugin 1.2.2
+
+macro-handler.ClojureSE.label=ClojureSE
+macro-handler.ClojureSE.glob=*.clj
+
+clojure-error.title=Clojure Error
+clojure-error.message=A Clojure error occurred.
+
+console.shell.ClojureSE-show.label=Clojure SE Shell
+open-ClojureSE-shell.label=Open Clojure SE Shell
+
+clojure.seshell.info.toggle=true
+clojure.seshell.info=Clojure 1.8.0 Shell: scripting engine.
+
+clojure.seshell.prompt=user=>
+
+clojure.seshell.evaluate-selection.label=Evaluate selection in Clojure SE
+clojure.seshell.evaluate-buffer.label=Evaluate buffer in Clojure SE
+clojure.seshell.evaluate-file.label=Evaluate file in Clojure SE
+clojure.seshell.run-startup.label=Load startup file(s)
+
+plugin.clojure.seshell.ClojureSEShellPlugin.menu=open-ClojureSE-shell - \
+	clojure.seshell.evaluate-selection \
+	clojure.seshell.evaluate-buffer \
+	clojure.seshell.evaluate-file - \
+	clojure.seshell.run-startup

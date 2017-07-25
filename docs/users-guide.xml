@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><book>
+<bookinfo>
+<title>Clojure SE Shell</title>
+<author>
+<firstname>Zigmantas</firstname>
+<surname>Kry&#382;ius</surname>
+</author>
+</bookinfo>
+<chapter id="overview"><title>Overview</title>
+<para>
+The Clojure SE (script engine) Shell plugin adds to jEdit the Clojure script handler so you
+can write macros and startup scripts in Clojure. It also adds the Clojure script engine shell
+to the console interface provided by the Console Plugin. This can be useful for creating and
+testing jEdit macros in Clojure.
+</para>
+<para>
+With the file clojure-jsr223-1.2.jar Clojure becomes a Java scripting engine complying JSR 223. The file
+clojure-jsr223-1.2.jar is found on
+<ulink url="https://mvnrepository.com/artifact/clojure-jsr223/clojure-jsr223/1.2">
+https://mvnrepository.com/artifact/clojure-jsr223/clojure-jsr223/1.2</ulink>
+or elsewhere, and is provided with the Clojure Plugin, version 1.2.2.
+</para>
+<para>
+To use the plugin, open up the Console dockable and select the <guimenuitem>Clojure SE</guimenuitem> shell.
+Once selected, it will attempt to start up the Read-Eval-Print-Loop, and if successful,
+the Clojure SE prompt <computeroutput>user=&gt;</computeroutput> will be displayed. If not successful, the Clojure provider plugin
+may need to be configured. Refer to that plugin's documentation for information on how to configure it.
+</para>
+<para>
+If you want to have an external library available inside the shell, simply add it to
+the classpath in <guimenuitem>Plugins -&gt; Plugin Options -&gt; Classpath</guimenuitem>, then restart the shell
+if necessary.
+</para>
+</chapter>
+<chapter id="actions"><title>Evaluating Code</title>
+<para>
+The easiest way to evaluate code in the shell is to simply type it in and hit enter.
+But there are several actions available that make it easier to test a portion of your
+code without having to manually copy and paste it.
+</para>
+<para>
+These actions can be found in the menu <guimenuitem>Plugins -&gt; Clojure SE Shell</guimenuitem>. Using these actions, you can
+use the shell to evaluate the active buffer, any selected text within that buffer,
+or an external Clojure script.
+</para>
+<para>
+Any variables or functions defined in the shell will persist until the loop is manually stopped and restarted.
+</para>
+</chapter>
+<chapter id="stop-restart"><title>Stopping and Restarting</title>
+<para>
+To stop the loop, click on the <guimenuitem>Stop</guimenuitem> button in the Console dockable. After it's stopped,
+hit <guimenuitem>Enter</guimenuitem> to start it back up again. Restarting can be used to reset the environment,
+or you can simply stop the loop to conserve system resources.
+</para>
+</chapter>
+<chapter id="global-variables">
+<title>Global Variables</title>
+<para>
+Clojure SE Shell Plugin provides the same global variables as the JavaScriptShell Plugin.
+<itemizedlist>
+<listitem>
+<para>
+<emphasis>view</emphasis> - the current jEdit view
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>editPane</emphasis> - the current jEdit editPane
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>textArea</emphasis> - the current jEdit textArea
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>buffer</emphasis> - the current jEdit buffer
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>wm</emphasis> - the dockableWindowManager of the curre
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>scriptPath</emphasis> - the path of the script in the current buffer
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>console</emphasis> - console
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>output</emphasis> - output
+</para>
+</listitem>
+<listitem>
+<para>
+<emphasis>engine</emphasis> - Clojure scripting engine
+</para>
+</listitem>
+</itemizedlist>
+</para>
+</chapter>
+<chapter id="macros-scripts"><title>Macros and Scripting</title>
+<para>
+jEdit macros in Clojure are Clojure scripts with file name extension <emphasis>clj</emphasis>, placed in the jEdit's settings or home subdirectory <emphasis>/macros</emphasis>. The following code can be saved as a sample macro in Clojure:
+<programlisting>
+(.splitHorizontally view)
+</programlisting>
+</para>
+<para>
+Some Clojure functions handy in scripting can be collected into the "startup" file or files that can be loaded at once via the <guimenuitem>Clojure SE Shell</guimenuitem> plugin menu item <guimenuitem>Load startup file(s)</guimenuitem>.
+The startup file(s), having the file name extension <emphasis>clj</emphasis>, should be placed the jEdit's settings or home subdirectory <emphasis>/startup</emphasis>.
+The following is the code in the file <emphasis>startup-clojure-se.clj</emphasis>.
+<programlisting>
+;;; startup utils and useful functions for Clojure SE Shell plugin
+
+(require '[clojure.reflect :as r])
+(use '[clojure.pprint :only [print-table]])
+
+(defn alert
+	[txt]
+	(org.gjt.sp.jedit.Macros/message view txt))
+
+(defn prompt
+	"Shows a prompt box to the user and returns the answer"
+	[question defaultValue]
+	(org.gjt.sp.jedit.Macros/input view question defaultValue))
+
+;; https://docs.oracle.com/javase/7/docs/api/javax/swing/JOptionPane.html
+(defn confirm
+	"Shows a confirmation message box to the user.
+	YES returns: 0; NO returns: 1; CANCEL retruns: 2."
+	[question]
+	(org.gjt.sp.jedit.Macros/confirm
+		view
+		question
+		(. javax.swing.JOptionPane YES_NO_CANCEL_OPTION)))
+
+;; http://stackoverflow.com/questions/5821286/how-can-i-get-the-methods-of-a-java-class-from-clojure
+(defn inspect
+	"Inspects Java object, prints to console."
+	[object]
+	(let
+		[reflected-obj (r/reflect object)
+		sorted-members (sort-by :name
+			(filter :exception-types (:members reflected-obj)))]
+		(print-table sorted-members)
+	))
+
+(defn print-buf
+	"Prints anything to new buffer."
+	[anything]
+	(let
+		[new-buffer (. org.gjt.sp.jedit.jEdit newFile view)]
+		(. new-buffer insert 0 (print-str anything))
+	))
+
+;; https://clojuredocs.org/clojure.core/with-out-str
+(defn inspect-buf
+	"Inspects Java object, prints output to new buffer."
+	[object]
+	(let
+		[reflected-obj (r/reflect object)
+		sorted-members (sort-by :name
+			(filter :exception-types (:members reflected-obj)))
+		table-str (with-out-str (print-table sorted-members))
+		new-buffer (. org.gjt.sp.jedit.jEdit newFile view)]
+		(. new-buffer insert 0 table-str)
+	))
+</programlisting>
+</para>
+<para>
+It is included in the Clojure SE Shell plugin's JAR file. You can extract it from the JAR file, place
+it into the startup subdirectory, load it via <guimenuitem>Load startup file(s)</guimenuitem>, and then test it setting
+to plugin's shell prompt, say,
+<programlisting>
+(inspect-buf view)
+</programlisting>
+</para>
+</chapter>
+</book>

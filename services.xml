@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE SERVICES SYSTEM "services.dtd">
+<SERVICES>
+	<SERVICE CLASS="console.Shell" NAME="Clojure SE">
+		new clojure.seshell.ClojureSEShell("ClojureSE");
+	</SERVICE>
+</SERVICES>
