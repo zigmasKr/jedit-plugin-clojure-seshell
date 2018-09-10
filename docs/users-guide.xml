@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><book>
 <bookinfo>
-<title>Clojure SE Shell</title>
+<title>Clojure - Scripting Engine Shell</title>
 <author>
 <firstname>Zigmantas</firstname>
 <surname>Kry&#382;ius</surname>
@@ -185,4 +185,9 @@ to plugin's shell prompt, say,
 </programlisting>
 </para>
 </chapter>
+<chapter id="contacts"><title>Contacts</title>
+		<para>
+			Author's contact: <email id="email">zigmas.kr@gmail.com</email>.
+		</para>
+	</chapter>
 </book>

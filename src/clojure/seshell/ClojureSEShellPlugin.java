@@ -30,7 +30,7 @@ public class ClojureSEShellPlugin extends EditPlugin {
 	public ClojureSEShellPlugin() {
 		super();
 		ClojureSEShell.init();
-		Macros.registerHandler(new ClojureSEHandler("ClojureSE"));
+		Macros.registerHandler(new ClojureSEHandler("ClojureSEHandler"));
 	}
 }
 

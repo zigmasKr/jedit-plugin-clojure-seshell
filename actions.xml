@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ACTIONS SYSTEM "actions.dtd">
 <ACTIONS>
+   <!--
 	<ACTION NAME="open-ClojureSE-shell">
 		<CODE>
 			wm.addDockableWindow("console");
@@ -8,6 +9,7 @@
 			dockable.setShell("Clojure SE");
 		</CODE>
 	</ACTION>
+	-->
 	<ACTION NAME="clojure.seshell.evaluate-selection">
 		<CODE>
 			clojure.seshell.ClojureSEShell.evaluateSelection();

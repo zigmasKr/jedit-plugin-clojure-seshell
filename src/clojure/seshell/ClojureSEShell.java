@@ -79,10 +79,6 @@ public class ClojureSEShell extends Shell {
 			Log.log(Log.DEBUG, ClojureSEShell.class, "Clojure script engine: " + engineClojure.toString());
 			engineClojure.setBindings(new SimpleBindings(), ScriptContext.ENGINE_SCOPE);
 			engineClojure.put("engine", engineClojure);
-			// [AWT-EventQueue-0] [debug] ClojureSEShell: Clojure: scriptManager: javax.script.ScriptEngineManager@d04dbd
-			// [AWT-EventQueue-0] [debug] PluginJAR: Opening C:\Users\Zigmas\AppData\Roaming\jEdit\jars\clojure-jsr223-1.2.jar
-			// [AWT-EventQueue-0] [debug] PluginJAR: Opening C:\Users\Zigmas\AppData\Roaming\jEdit\jars\clojure-1.8.0.jar
-			// [AWT-EventQueue-0] [debug] ClojureSEShell: Clojure: script engine: clojure.contrib.jsr223.ClojureScriptEngine@1f43159
 		} else {
 			Log.log(Log.ERROR, ClojureSEShell.class, "Clojure script engine: null");
 		}
@@ -229,44 +225,6 @@ public class ClojureSEShell extends Shell {
 
 	}//}}}
 
-	//{{{ runScript() method
-
-	/**
-	 * Execute the contents of a file as a script.
-	 *
-	 * A fake console.Output object is provided, to collect output
-	 * from the script, thus emualating a console.
-	 *
-	 * @param path  The file path of the script.
-	 * @param view  A jEdit view.
-	 */
-	public static void runScript(String path, View view) {
-
-		File  file  = new File(path);
-
-		if (file.exists()) {
-
-			try {
-
-				BufferedReader  reader  = new BufferedReader(new FileReader(file));
-				StringBuffer    code    = new StringBuffer();
-				Output          output  = new StringOutput();
-				String          line;
-
-				while ((line = reader.readLine()) != null) {
-					code.append(line + "\n");
-				}
-
-				setGlobals(view, output);
-				engineClojure.getContext().setWriter(new PrintWriter(new ShellWriter(output)));
-				engineClojure.eval(code.toString());
-			} catch (Exception e) {
-				Log.log(Log.ERROR, ClojureSEShell.class, e.toString());
-				new TextAreaDialog(view, "clojure-error", e);
-			}
-		}
-	}//}}}
-
 	//{{{ evaluateSelection() method
 	/** Evaluate the contents of selected text in the current buffer.  */
 	public static void evaluateSelection() {
@@ -365,6 +323,43 @@ public class ClojureSEShell extends Shell {
 		}
 	}//}}}
 
+	//{{{ runScript() method
+
+	/**
+	 * Execute the contents of a file as a script.
+	 *
+	 * A fake console.Output object is provided, to collect output
+	 * from the script, thus emualating a console.
+	 *
+	 * @param path  The file path of the script.
+	 * @param view  A jEdit view.
+	 */
+	public static void runScript(String path, View view) {
+
+		File  file  = new File(path);
+
+		if (file.exists()) {
+
+			try {
+
+				BufferedReader  reader  = new BufferedReader(new FileReader(file));
+				StringBuffer    code    = new StringBuffer();
+				Output          output  = new StringOutput();
+				String          line;
+
+				while ((line = reader.readLine()) != null) {
+					code.append(line + "\n");
+				}
+
+				setGlobals(view, output);
+				engineClojure.getContext().setWriter(new PrintWriter(new ShellWriter(output)));
+				engineClojure.eval(code.toString());
+			} catch (Exception e) {
+				Log.log(Log.ERROR, ClojureSEShell.class, e.toString());
+				new TextAreaDialog(view, "clojure-error", e);
+			}
+		}
+	}//}}}
 
 	//{{{ evaluateCode() method
 	/**

@@ -6,8 +6,27 @@
 		Builds the ClojureSEShell plugin using the required build-support plugin-build.xml
 	 </description>
 
+	 <!--
+	conditional on the operating system
+	https://alvinalexander.com/blog/post/java/how-conditional-operation-ant-script-operating-system
+	-->
+	<!-- <echo message="${os.name}" /> -->
+	<condition property="os.nickname" value="win">
+		<os family="windows" />
+	</condition>
+	<condition property="os.nickname" value="lin">
+		<os family="unix" />
+	</condition>
+	<condition property="os.nickname" value="mac">
+		<os family="mac" />
+	</condition>
+	<!-- <echo message="os nickname is ${os.nickname}"/> -->
+
+	<property file="build-${os.nickname}.properties" />
+	<!--
 	<property file="build.properties" />
-	<!-- <property file="../build.properties" />    -->
+	<property file="../build.properties" />
+	-->
 
 	<property name="compiler.source"		value="1.8" />
 	<property name="compiler.target" 		value="1.8" />
@@ -22,7 +41,7 @@
 	Though the latter is already in plugin-build.xml
 	-->
 	<property name="docs-proc.target" value="xsltproc" />
-	<property name="plugin.version" value="0.9" />
+	<property name="plugin.version" value="1.0" />
 	<!--
 	<property name="docs-proc.target"       value="none" />
 	-->
